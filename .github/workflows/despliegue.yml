@@ -6,20 +6,6 @@ on:
       - master
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-
-      - name: Install dependencies
-        run: composer install
-
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -32,7 +18,7 @@ jobs:
           php-version: '8.3'
 
       - name: Install dependencies
-        run: composer install
+        run: composer install --no-dev --optimize-autoloader
 
       - name: Deploy to server
         env:
@@ -45,14 +31,14 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          # Use SSH to create the deploy path if it doesn't exist
-          ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "mkdir -p $DEPLOY_PATH"
+          # Crear el directorio de despliegue con permisos adecuados
+          ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "sudo mkdir -p $DEPLOY_PATH && sudo chown -R $USERNAME:$USERNAME $DEPLOY_PATH"
 
-          # Sync the application files to the server
-          rsync -avz --delete --no-t --exclude 'tests' --exclude '.git' . $USERNAME@$HOST:$DEPLOY_PATH
+          # Sincronizar archivos
+          rsync -avz --no-t --exclude 'tests' --exclude '.git' . $USERNAME@$HOST:$DEPLOY_PATH
 
-          # Optionally, run Composer install on the server
+          # Instalar dependencias de Composer en el servidor
           ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "cd $DEPLOY_PATH && composer install --no-dev --optimize-autoloader"
 
-          # Restart Apache if needed
+          # Reiniciar Apache
           ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "sudo systemctl restart apache2"
