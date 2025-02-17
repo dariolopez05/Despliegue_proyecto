@@ -21,13 +21,13 @@ jobs:
             # Construir y subir imagen Symfony
             - name: Construir y subir imagen Symfony
               run: |
-                  docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest -f .docker/php.Dockerfile ./
+                  docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest -f .docker/php.Dockerfile ./ 
                   docker push ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest
 
             # Construir y subir imagen Nginx
             - name: Construir y subir imagen Nginx
               run: |
-                  docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-nginx:latest -f .docker/nginx.Dockerfile ./
+                  docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-nginx:latest -f .docker/nginx.Dockerfile ./ 
                   docker push ${{ secrets.DOCKER_USERNAME }}/symfony-nginx:latest
 
     deploy:
@@ -45,6 +45,11 @@ jobs:
                   ls -R  # Esto te ayudará a comprobar la estructura y las rutas de tus archivos
 
             # Asegurarse de que el archivo compose.yml se transfiere desde el lugar correcto
+            - name: Verificar archivo compose.yml localmente
+              run: |
+                  echo "Archivo compose.yml en local:"
+                  ls -l ${GITHUB_WORKSPACE}/despliegue/src/compose.yml  # Verifica que el archivo existe localmente
+
             - name: Transferir el archivo compose.yml al servidor remoto
               uses: appleboy/scp-action@master
               with:
@@ -54,10 +59,12 @@ jobs:
                   source: ${{ github.workspace }}/despliegue/src/compose.yml
                   target: ~/deploy/
                   strip_components: 4  # Ajustar para que se copie correctamente al directorio remoto
+                  port: 22  # Ajuste para puerto, si es necesario
 
             - name: Verificar archivo compose.yml en el servidor remoto
               run: |
                   ssh -i ${{ secrets.REMOTE_KEY }} ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'ls -l ~/deploy/compose.yml'
+                  # Si el archivo no existe en el servidor remoto, este paso fallará y proporcionará más información
 
             - name: Desplegar en servidor remoto
               uses: appleboy/ssh-action@master
