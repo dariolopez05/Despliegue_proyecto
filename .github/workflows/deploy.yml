@@ -56,6 +56,13 @@ jobs:
           echo "${{ secrets.REMOTE_KEY }}" > ~/.ssh/id_rsa  # Crear el archivo con la clave privada
           chmod 600 ~/.ssh/id_rsa  # Asegura que la clave tenga los permisos correctos
 
+      # Agregar la huella digital del servidor remoto a known_hosts para evitar "Host key verification failed"
+      - name: Agregar el servidor remoto a known_hosts
+        run: |
+          mkdir -p ~/.ssh  # Asegura que .ssh exista
+          ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts  # Ajusta los permisos del archivo known_hosts
+
       # Asegurarse de que el archivo compose.yml se transfiere desde el lugar correcto
       - name: Transferir el archivo compose.yml al servidor remoto
         uses: appleboy/scp-action@master
