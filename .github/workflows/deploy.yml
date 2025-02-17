@@ -37,7 +37,7 @@ jobs:
             - name: Checkout código
               uses: actions/checkout@v4
               with:
-                  ref: '*'  # Asegura que se use cualquier rama que haga push
+                  ref: ${{ github.ref }}  # Asegura que se use la rama que ha hecho el push
 
             - name: Verificar estructura del repositorio
               run: |
@@ -54,6 +54,10 @@ jobs:
                   source: ${{ github.workspace }}/despliegue/src/compose.yml
                   target: ~/deploy/
                   strip_components: 4  # Ajustar para que se copie correctamente al directorio remoto
+
+            - name: Verificar archivo compose.yml en el servidor remoto
+              run: |
+                  ssh -i ${{ secrets.REMOTE_KEY }} ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'ls -l ~/deploy/compose.yml'
 
             - name: Desplegar en servidor remoto
               uses: appleboy/ssh-action@master
