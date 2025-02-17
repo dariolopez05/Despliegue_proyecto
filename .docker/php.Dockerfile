@@ -28,7 +28,7 @@ COPY . .
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
 
-# Ejecuta cache:clear manualmente en entorno proda
+# Ejecuta cache:clear manualmente en entorno prodaS
 RUN php bin/console cache:clear --env=prod || true
 
 # Ajusta permisos
