@@ -39,11 +39,10 @@ jobs:
               with:
                   ref: ${{ github.ref }}  # Asegura que se use la rama que ha hecho el push
 
-            # Verificar archivo compose.yml en local
-            - name: Verificar archivo compose.yml en local
+            - name: Verificar estructura del repositorio
               run: |
-                echo "Archivo compose.yml en local:"
-                ls -l ${{ github.workspace }}/despliegue/src/compose.yml
+                  echo "Directorio actual: $(pwd)"
+                  ls -R  # Esto te ayudará a comprobar la estructura y las rutas de tus archivos
 
             # Asegurarse de que el archivo compose.yml se transfiere desde el lugar correcto
             - name: Transferir el archivo compose.yml al servidor remoto
@@ -52,14 +51,13 @@ jobs:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.REMOTE_KEY }}
-                  source: ${{ github.workspace }}/despliegue/src/compose.yml
+                  source: ${{ github.workspace }}/src/compose.yml  # Ruta correcta al archivo compose.yml
                   target: ~/deploy/
                   strip_components: 4  # Ajustar para que se copie correctamente al directorio remoto
 
-            # Verificar archivo compose.yml en el servidor remoto
             - name: Verificar archivo compose.yml en el servidor remoto
               run: |
-                ssh -i ${{ secrets.REMOTE_KEY }} ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'ls -l ~/deploy/compose.yml'
+                  ssh -i ${{ secrets.REMOTE_KEY }} ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'ls -l ~/deploy/compose.yml'
 
             - name: Desplegar en servidor remoto
               uses: appleboy/ssh-action@master
