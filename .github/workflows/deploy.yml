@@ -63,6 +63,27 @@ jobs:
           ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts  # Ajusta los permisos del archivo known_hosts
 
+      # Instalar Docker y Docker Compose en el servidor remoto
+      - name: Instalar Docker y Docker Compose en el servidor remoto
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} << 'EOF'
+            # Instalar Docker
+            sudo apt-get update
+            sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+            sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+            sudo apt-get update
+            sudo apt-get install -y docker-ce
+
+            # Instalar Docker Compose
+            sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+
+            # Verificar instalación
+            docker --version
+            docker-compose --version
+          EOF
+
       # Asegurarse de que el archivo compose.yml se transfiere desde el lugar correcto
       - name: Transferir el archivo compose.yml al servidor remoto
         uses: appleboy/scp-action@master
