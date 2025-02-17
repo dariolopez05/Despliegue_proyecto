@@ -6,8 +6,9 @@ services:
     container_name: symfony_app
     restart: always
     working_dir: /var/www/html
-    # volumes:
-    #   - .:/var/www/html
+    volumes:
+      - .:/var/www/html  # Asegúrate de que se monte correctamente el directorio del proyecto
+    entrypoint: ["./scripts/wait-for-it.sh", "database:3306", "--", "docker-php-entrypoint", "php-fpm"]
     depends_on:
       database:
         condition: service_healthy
@@ -44,6 +45,3 @@ services:
 
 volumes:
   db_data:
-
-# env_file:sass
-#   - .env
