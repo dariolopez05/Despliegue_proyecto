@@ -13,9 +13,8 @@ services:
       database:
         condition: service_healthy
     environment:
-      # Establece variables de entorno necesarias para el contenedor PHP
       SYMFONY_ENV: prod
-      DATABASE_URL: "mysql://root:root@database:3306/Patinaje"
+      DATABASE_URL: "mysql://root:root@database:3306/Patinaje"  # URL de la base de datos
 
   nginx:
     image: davidreinon/symfony-nginx:latest
@@ -45,7 +44,7 @@ services:
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
-      retries: 3
+      retries: 5  # Aumenté el número de reintentos para darle más margen al servicio de base de datos
       timeout: 10s
 
 volumes:
