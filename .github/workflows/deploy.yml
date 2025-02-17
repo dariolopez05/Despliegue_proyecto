@@ -52,7 +52,8 @@ jobs:
       # Crear el archivo de clave privada temporalmente para usar con SSH
       - name: Crear archivo de clave privada temporal
         run: |
-          echo "${{ secrets.REMOTE_KEY }}" > ~/.ssh/id_rsa
+          mkdir -p ~/.ssh  # Crear el directorio .ssh si no existe
+          echo "${{ secrets.REMOTE_KEY }}" > ~/.ssh/id_rsa  # Crear el archivo con la clave privada
           chmod 600 ~/.ssh/id_rsa  # Asegura que la clave tenga los permisos correctos
 
       # Asegurarse de que el archivo compose.yml se transfiere desde el lugar correcto
