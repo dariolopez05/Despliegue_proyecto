@@ -3,7 +3,7 @@ name: Deploy Symfony API with MySQL and Nginx
 on:
     push:
         branches:
-            - despliegueDocker
+            - '*'
 
 jobs:
     build-and-push:
