@@ -1,3 +1,3 @@
 <?php
 
-echo "Despliegue del proyecto";
+echo "Despliegue del proyectos";
