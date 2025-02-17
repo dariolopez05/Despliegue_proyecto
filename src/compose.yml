@@ -8,10 +8,14 @@ services:
     working_dir: /var/www/html
     volumes:
       - .:/var/www/html  # Asegúrate de que se monte correctamente el directorio del proyecto
-    entrypoint: ["./scripts/wait-for-it.sh", "database:3306", "--", "docker-php-entrypoint", "php-fpm"]
+    entrypoint: ["./scripts/wait-for-it.sh", "database:3306", "--timeout=60", "--", "docker-php-entrypoint", "php-fpm"]
     depends_on:
       database:
         condition: service_healthy
+    environment:
+      # Establece variables de entorno necesarias para el contenedor PHP
+      SYMFONY_ENV: prod
+      DATABASE_URL: "mysql://root:root@database:3306/Patinaje"
 
   nginx:
     image: davidreinon/symfony-nginx:latest
@@ -42,6 +46,7 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 3
+      timeout: 10s
 
 volumes:
   db_data:
