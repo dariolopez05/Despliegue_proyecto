@@ -44,6 +44,11 @@ jobs:
                   echo "Directorio actual: $(pwd)"
                   ls -R  # Esto te ayudará a comprobar la estructura y las rutas de tus archivos
 
+            - name: Verificar que el archivo compose.yml existe
+              run: |
+                echo "Revisando el archivo compose.yml"
+                ls -l src/compose.yml  # Verifica que el archivo esté presente en la ruta esperada
+
             # Asegurarse de que el archivo compose.yml se transfiere desde el lugar correcto
             - name: Transferir el archivo compose.yml al servidor remoto
               uses: appleboy/scp-action@master
@@ -53,7 +58,8 @@ jobs:
                   key: ${{ secrets.REMOTE_KEY }}
                   source: src/compose.yml  # Ruta correcta al archivo compose.yml
                   target: ~/deploy/
-                  strip_components: 4  # Ajustar para que se copie correctamente al directorio remoto
+                  debug: true  # Habilitar depuración para obtener más detalles sobre el proceso de transferencia
+                  strip_components: 1  # Ajuste para eliminar los directorios innecesarios durante la transferencia
 
             - name: Verificar archivo compose.yml en el servidor remoto
               run: |
