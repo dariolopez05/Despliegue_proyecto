@@ -56,7 +56,7 @@ jobs:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.REMOTE_KEY }}
-                  source: ${{ github.workspace }}src/compose.yml
+                  source: ${{ github.workspace }}/despliegue/src/compose.yml
                   target: ~/deploy/
                   strip_components: 4  # Ajustar para que se copie correctamente al directorio remoto
                   port: 22  # Ajuste para puerto, si es necesario

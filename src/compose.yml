@@ -29,10 +29,10 @@ services:
     container_name: symfony_mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: FloridaRoot1324
-      MYSQL_DATABASE: edelmiro_monros
-      MYSQL_USER: edelmiro
-      MYSQL_PASSWORD: edelmiro1324
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: Patinaje
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     ports:
       - "3306:3306"
     volumes:
