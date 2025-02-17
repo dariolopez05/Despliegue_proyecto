@@ -21,13 +21,13 @@ jobs:
             # Construir y subir imagen Symfony
             - name: Construir y subir imagen Symfony
               run: |
-                  docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest -f backend/EdelmiroMonros/docker/php.Dockerfile backend/EdelmiroMonros/
+                  docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest -f despliegue/.docker/php.Dockerfile desplieggue/src/
                   docker push ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest
 
             # Construir y subir imagen Nginx
             - name: Construir y subir imagen Nginx
               run: |
-                  docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-nginx:latest -f backend/EdelmiroMonros/docker/nginx.Dockerfile backend/EdelmiroMonros/
+                  docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-nginx:latest -f despliegue/.docker/php.Dockerfile desplieggue/src/
                   docker push ${{ secrets.DOCKER_USERNAME }}/symfony-nginx:latest
 
     deploy:
@@ -37,7 +37,7 @@ jobs:
             - name: Checkout código
               uses: actions/checkout@v4
               with:
-                  ref: despliegueDocker # Asegura que se usa esta rama
+                  ref: '*' # Asegura que se usa esta rama
 
             - name: Verificar estructura del repositorio
               run: |
@@ -50,7 +50,7 @@ jobs:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.REMOTE_KEY }}
-                  source: ${{ github.workspace }}/backend/EdelmiroMonros/compose.yml
+                  source: ${{ github.workspace }}/despliegue/src/compose.yml
                   target: ~/deploy/
                   strip_components: 4
 
