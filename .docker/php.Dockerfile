@@ -25,6 +25,10 @@ WORKDIR /var/www/html
 COPY ../src .  
 # Copia el código desde ../src al contenedor
 
+RUN curl -sS https://getcomposer.org/installer -o /tmp/composer-installer.php
+RUN php /tmp/composer-installer.php --install-dir=/usr/local/bin --filename=composer
+
+USER root
 # Instala Composer y dependencias sin ejecutar auto-scripts
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
