@@ -70,7 +70,7 @@ jobs:
             # Instalar Docker
             sudo apt-get update
             sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - 
             sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
             sudo apt-get update
             sudo apt-get install -y docker-ce
@@ -101,6 +101,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'ls -l ~/deploy/compose.yml'
 
+      # Desplegar en servidor remoto
       - name: Desplegar en servidor remoto
         uses: appleboy/ssh-action@master
         with:
@@ -115,6 +116,7 @@ jobs:
             docker-compose -f /home/${{ secrets.REMOTE_USER }}/deploy/compose.yml down
             docker-compose -f /home/${{ secrets.REMOTE_USER }}/deploy/compose.yml up -d --force-recreate
 
+      # Crear la base de datos si no existe y ejecutar migraciones
       - name: Crear la base de datos si no existe y ejecutar migraciones
         uses: appleboy/ssh-action@master
         with:
@@ -122,5 +124,6 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_KEY }}
           script: |
-            docker exec symfony_app php bin/console doctrine:database:create --if-not-exists
+            # Esperar a que la base de datos esté lista antes de continuar
+            docker exec symfony_app ./scripts/wait-for-it.sh database:3306 --timeout=60 -- docker exec symfony_app php bin/console doctrine:database:create --if-not-exists
             docker exec symfony_app php bin/console doctrine:migrations:migrate --no-interaction
