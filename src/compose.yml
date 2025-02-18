@@ -5,9 +5,9 @@ services:
     image: davidreinon/symfony-app:latest
     container_name: symfony_app
     restart: always
-    working_dir: /var/www/html
+    working_dir: /var/back  # Cambiar a la ruta que quieres usar en el contenedor
     volumes:
-      - .:/var/www/html  # Asegúrate de que se monte correctamente todo el directorio
+      - .:/var/back  # Montar el directorio de tu máquina local en /var/back del contenedor
     depends_on:
       database:
         condition: service_healthy
@@ -22,7 +22,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - .:/var/www/html
+      - .:/var/back  # Cambia a /var/back también
     depends_on:
       php:
         condition: service_started
