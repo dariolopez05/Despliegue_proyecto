@@ -21,7 +21,7 @@ jobs:
       # Construir y subir imagen Symfony
       - name: Construir y subir imagen Symfony
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest -f .docker/php.Dockerfile ./ 
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest -f Dockerfile ./ 
           docker push ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest
 
       # Construir y subir imagen Nginx
@@ -43,11 +43,6 @@ jobs:
         run: |
           echo "Directorio actual: $(pwd)"
           ls -R  # Esto te ayudará a comprobar la estructura y las rutas de tus archivos
-
-      - name: Verificar que el archivo compose.yml existe
-        run: |
-          echo "Revisando el archivo compose.yml"
-          ls -l src/compose.yml  # Verifica que el archivo esté presente en la ruta esperada
 
       # Crear el archivo de clave privada temporalmente para usar con SSH
       - name: Crear archivo de clave privada temporal
@@ -91,15 +86,11 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_KEY }}
-          source: src/compose.yml  # Ruta correcta al archivo compose.yml
+          source: compose.yml  # Ruta correcta al archivo compose.yml
           target: ~/deploy/
           debug: true  # Habilitar depuración para obtener más detalles sobre el proceso de transferencia
           strip_components: 1  # Ajuste para eliminar los directorios innecesarios durante la transferencia
           timeout: 120s  # Aumentar el timeout a 120 segundos
-
-      - name: Verificar archivo compose.yml en el servidor remoto
-        run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} 'ls -l ~/deploy/compose.yml'
 
       - name: Desplegar en servidor remoto
         uses: appleboy/ssh-action@master

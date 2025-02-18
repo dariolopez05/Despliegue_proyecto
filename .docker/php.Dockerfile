@@ -22,16 +22,18 @@ RUN apt-get update && apt-get install -y \
 
 # Configura el directorio de trabajo y copia el código
 WORKDIR /var/www/html
-COPY . .
+COPY . .  # Copia todos los archivos al contenedor
 
 # Instala Composer y dependencias sin ejecutar auto-scripts
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
 
-# Ejecuta cache:clear manualmente en entorno prodaS
+# Ejecuta cache:clear manualmente en entorno prod
 RUN php bin/console cache:clear --env=prod || true
 
 # Ajusta permisos
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 777 /var/www/html/var \
+    && chmod -R 777 /var/www/html/public
 
 CMD ["php-fpm"]
