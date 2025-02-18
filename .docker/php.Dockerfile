@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /var/www/html
 
 # Copia todo el contenido de tu proyecto al contenedor
-COPY ../../src .  
+COPY ../../src/ .  
 
 # Asegúrate de que composer.json está copiado correctamente
 RUN ls -al /var/www/html
