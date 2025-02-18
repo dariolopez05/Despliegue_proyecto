@@ -22,7 +22,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - .:/var/back  # Cambia a /var/back también
+      - .:/var/back  # Cambia a /var/back tambiénh
     depends_on:
       php:
         condition: service_started
