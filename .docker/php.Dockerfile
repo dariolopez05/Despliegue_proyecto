@@ -22,9 +22,14 @@ RUN apt-get update && apt-get install -y \
 
 # Configura el directorio de trabajo y copia el código
 WORKDIR /var/www/html
-COPY ../src .  
 
-# Instala Composer en el contenedor (sin ejecutar scripts)
+# Copia todo el contenido de tu proyecto al contenedor
+COPY ../../src .  
+
+# Asegúrate de que composer.json está copiado correctamente
+RUN ls -al /var/www/html
+
+# Instala Composer
 RUN curl -sS https://getcomposer.org/installer -o /tmp/composer-installer.php \
     && php /tmp/composer-installer.php --install-dir=/usr/local/bin --filename=composer
 
