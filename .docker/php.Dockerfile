@@ -18,16 +18,19 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libicu-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql zip gd intl opcache
+    && docker-php-ext-install pdo pdo_mysql zip gd intl opcache phar
+
+# Verifica conexión a Composer antes de descargarlo
+RUN curl -I https://getcomposer.org/ || exit 1
+
+# Instala Composer y dependencias sin ejecutar auto-scripts
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
 
 # Configura el directorio de trabajo y copia el código
 WORKDIR /var/www/html
 COPY ../src .  
 # Copia el código desde ../src al contenedor
-
-# Instala Composer y dependencias sin ejecutar auto-scripts
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --no-interaction --optimize-autoloader --no-scripts
 
 # Ejecuta cache:clear manualmente en entorno prod
 RUN php bin/console cache:clear --env=prod || true
