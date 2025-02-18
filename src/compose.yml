@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   php:
-    build:
-      context: .
-      dockerfile: Dockerfile  # Asegúrate de que el Dockerfile esté en la raíz del proyecto
+    image: davidreinon/symfony-app:latest
     container_name: symfony_app
     restart: always
     working_dir: /var/www/html
@@ -50,14 +48,15 @@ services:
       timeout: 10s
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: symfony_phpmyadmin
     restart: always
     ports:
-      - "8080:80"  # Acceso a phpMyAdmin en el puerto 8080
+      - "8080:80"  # Puedes acceder a phpMyAdmin a través de http://<tu-ip>:8080
     environment:
-      PMA_HOST: database
-      MYSQL_ROOT_PASSWORD: root
+      PMA_HOST: database  # Nombre del servicio de la base de datos
+      PMA_USER: root      # Usuario de la base de datos
+      PMA_PASSWORD: root  # Contraseña de la base de datos
     depends_on:
       database:
         condition: service_healthy
