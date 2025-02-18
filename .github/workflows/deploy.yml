@@ -21,13 +21,13 @@ jobs:
       # Construir y subir imagen Symfony
       - name: Construir y subir imagen Symfony
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest -f .docker/php.Dockerfile ./ 
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest -f .docker/php.Dockerfile ../../src 
           docker push ${{ secrets.DOCKER_USERNAME }}/symfony-app:latest
 
       # Construir y subir imagen Nginx
       - name: Construir y subir imagen Nginx
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-nginx:latest -f .docker/nginx.Dockerfile ./ 
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/symfony-nginx:latest -f .docker/nginx.Dockerfile ../../src 
           docker push ${{ secrets.DOCKER_USERNAME }}/symfony-nginx:latest
 
   deploy:
@@ -122,5 +122,5 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_KEY }}
           script: |
-            docker exec symfony_app php /var/www/html/src/bin/console doctrine:database:create --if-not-exists
-            docker exec symfony_app php /var/www/html/src/bin/console doctrine:migrations:migrate --no-interaction
+            docker exec symfony_app php bin/console doctrine:database:create --if-not-exists
+            docker exec symfony_app php bin/console doctrine:migrations:migrate --no-interaction

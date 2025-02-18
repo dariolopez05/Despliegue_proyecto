@@ -6,15 +6,12 @@ services:
     container_name: symfony_app
     restart: always
     working_dir: /var/www/html  # Cambiar a la ruta que quieres usar en el contenedor
-    volumes:
-      - .:/var/www/html  # Montar el directorio de tu máquina local en /var/back del contenedor
+    #volumes:
+    #  - .:/var/www/html  # Montar el directorio de tu máquina local en /var/back del contenedor
     depends_on:
       database:
         condition: service_healthy
-    environment:
-      SYMFONY_ENV: prod
-      DATABASE_URL: "mysql://root:root@database:3306/Patinaje"  # URL de la base de datos
-
+  
   nginx:
     image: dariolopez05/symfony-nginx:latest
     container_name: symfony_nginx
@@ -43,20 +40,6 @@ services:
       interval: 10s
       retries: 5  # Aumenté el número de reintentos para darle más margen al servicio de base de datos
       timeout: 10s
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: symfony_phpmyadmin
-    restart: always
-    ports:
-      - "8080:80"  # Puedes acceder a phpMyAdmin a través de http://<tu-ip>:8080
-    environment:
-      PMA_HOST: database  # Nombre del servicio de la base de datos
-      PMA_USER: root      # Usuario de la base de datos
-      PMA_PASSWORD: root  # Contraseña de la base de datos
-    depends_on:
-      database:
-        condition: service_healthy
 
 volumes:
   db_data:
