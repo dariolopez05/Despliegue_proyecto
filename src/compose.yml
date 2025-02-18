@@ -7,8 +7,7 @@ services:
     restart: always
     working_dir: /var/www/html
     volumes:
-      - .:/var/www/html  # Asegúrate de que se monte correctamente el directorio del proyecto
-    entrypoint: ["sh", "-c", "composer install --no-interaction --prefer-dist && ./scripts/wait-for-it.sh database:3306 --timeout=60 -- docker-php-entrypoint php-fpm"]
+      - .:/var/www/html  # Asegúrate de que se monte correctamente todo el directorio
     depends_on:
       database:
         condition: service_healthy
