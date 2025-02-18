@@ -47,7 +47,7 @@ jobs:
       - name: Verificar que el archivo compose.yml existe
         run: |
           echo "Revisando el archivo compose.yml"
-          ls -l src/src/compose.yml  # Verifica que el archivo esté presente en la ruta esperada
+          ls -l src/compose.yml  # Verifica que el archivo esté presente en la ruta esperada
 
       # Crear el archivo de clave privada temporalmente para usar con SSH
       - name: Crear archivo de clave privada temporal
@@ -91,7 +91,7 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_KEY }}
-          source: src/src/compose.yml  # Ruta correcta al archivo compose.yml
+          source: src/compose.yml  # Ruta correcta al archivo compose.yml
           target: ~/deploy/
           debug: true  # Habilitar depuración para obtener más detalles sobre el proceso de transferencia
           strip_components: 1  # Ajuste para eliminar los directorios innecesarios durante la transferencia
