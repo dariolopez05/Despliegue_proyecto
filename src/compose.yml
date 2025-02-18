@@ -47,5 +47,19 @@ services:
       retries: 5  # Aumenté el número de reintentos para darle más margen al servicio de base de datos
       timeout: 10s
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: symfony_phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"  # Puedes acceder a phpMyAdmin a través de http://<tu-ip>:8080
+    environment:
+      PMA_HOST: database  # Nombre del servicio de la base de datos
+      PMA_USER: root      # Usuario de la base de datos
+      PMA_PASSWORD: root  # Contraseña de la base de datos
+    depends_on:
+      database:
+        condition: service_healthy
+
 volumes:
   db_data:
