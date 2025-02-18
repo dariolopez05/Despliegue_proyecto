@@ -60,7 +60,7 @@ jobs:
       - name: Agregar el servidor remoto a known_hosts
         run: |
           mkdir -p ~/.ssh  # Asegura que .ssh exista
-          ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.REMOTE_HOST }} -v >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts  # Ajusta los permisos del archivo known_hosts
 
       # Instalar Docker y Docker Compose en el servidor remoto
