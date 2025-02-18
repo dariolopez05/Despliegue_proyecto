@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   php:
-    image: davidreinon/symfony-app:latest
+    image: dariolopez05/symfony-app:latest
     container_name: symfony_app
     restart: always
     working_dir: /var/back  # Cambiar a la ruta que quieres usar en el contenedor
@@ -16,7 +16,7 @@ services:
       DATABASE_URL: "mysql://root:root@database:3306/Patinaje"  # URL de la base de datos
 
   nginx:
-    image: davidreinon/symfony-nginx:latest
+    image: dariolopez05/symfony-nginx:latest
     container_name: symfony_nginx
     restart: always
     ports:
