@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   php:
-    image: dariolopez05/symfony-app:latest
+    image: davidreinon/symfony-app:latest
     container_name: symfony_app
     restart: always
     working_dir: /var/www/html
@@ -13,7 +13,7 @@ services:
         condition: service_healthy
 
   nginx:
-    image: dariolopez05/symfony-nginx:latest
+    image: davidreinon/symfony-nginx:latest
     container_name: symfony_nginx
     restart: always
     ports:
@@ -29,10 +29,10 @@ services:
     container_name: symfony_mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: patinaje
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: FloridaRoot1324
+      MYSQL_DATABASE: edelmiro_monros
+      MYSQL_USER: edelmiro
+      MYSQL_PASSWORD: edelmiro1324
     ports:
       - "3306:3306"
     volumes:
