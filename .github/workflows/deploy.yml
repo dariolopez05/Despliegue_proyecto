@@ -36,7 +36,7 @@ jobs:
         steps:
             - name: Checkout código
               uses: actions/checkout@v4
-              
+
             - name: Verificar estructura del repositorio
               run: |
                   echo "Directorio actual: $(pwd)"
@@ -48,7 +48,7 @@ jobs:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.REMOTE_KEY }}
-                  source: ${{ github.workspace }}src/compose.yml
+                  source: ${{ github.workspace }}compose.yml
                   target: ~/deploy/
                   strip_components: 4
 
