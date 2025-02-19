@@ -48,7 +48,7 @@ jobs:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.REMOTE_KEY }}
-                  source: "src/compose.yml"
+                  source: "src/compose.yml"  # Asegúrate de que el archivo correcto esté siendo transferido
                   target: "~/deploy/"
 
             - name: Instalar Docker y Docker Compose en el servidor remoto (si es necesario)
