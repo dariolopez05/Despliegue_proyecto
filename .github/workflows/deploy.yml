@@ -36,9 +36,7 @@ jobs:
         steps:
             - name: Checkout código
               uses: actions/checkout@v4
-              with:
-                  ref: '*' # Asegura que se usa esta rama
-
+              
             - name: Verificar estructura del repositorio
               run: |
                   echo "Directorio actual: $(pwd)"
